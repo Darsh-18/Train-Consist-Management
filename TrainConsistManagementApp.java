@@ -1,46 +1,42 @@
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.regex.*;
 
-// CUSTOM EXCEPTION (UC14)
-class InvalidCapacityException extends Exception {
-    public InvalidCapacityException(String message) {
+// CUSTOM RUNTIME EXCEPTION (UC15)
+class CargoSafetyException extends RuntimeException {
+    public CargoSafetyException(String message) {
         super(message);
     }
 }
 
-// UPDATED Bogie class with validation
-class Bogie {
-    String name;
-    int capacity;
-
-    public Bogie(String name, int capacity) throws InvalidCapacityException {
-        if (capacity <= 0) {
-            throw new InvalidCapacityException("Capacity must be greater than zero");
-        }
-        this.name = name;
-        this.capacity = capacity;
-    }
-
-    @Override
-    public String toString() {
-        return name + " (" + capacity + ")";
-    }
-}
-
-// UC12 class
+// GOODS BOGIE CLASS
 class GoodsBogie {
     String type;
     String cargo;
 
-    public GoodsBogie(String type, String cargo) {
+    public GoodsBogie(String type) {
         this.type = type;
-        this.cargo = cargo;
+    }
+
+    public void assignCargo(String cargo) {
+        try {
+            // VALIDATION
+            if (type.equals("Rectangular") && cargo.equals("Petroleum")) {
+                throw new CargoSafetyException("Unsafe: Rectangular bogie cannot carry Petroleum");
+            }
+
+            this.cargo = cargo;
+            System.out.println("Cargo assigned successfully: " + cargo);
+
+        } catch (CargoSafetyException e) {
+            System.out.println("Error: " + e.getMessage());
+
+        } finally {
+            System.out.println("Assignment attempt completed for " + type + " bogie.\n");
+        }
     }
 
     @Override
     public String toString() {
-        return type + " carrying " + cargo;
+        return type + " carrying " + (cargo == null ? "Nothing" : cargo);
     }
 }
 
@@ -50,35 +46,24 @@ public class TrainConsistManagementApp {
 
         System.out.println("=== Train Consist Management App ===");
 
-        // ==========================
-        // UC14 STARTS HERE
-        // ==========================
+        // CREATE BOGIES
+        GoodsBogie g1 = new GoodsBogie("Cylindrical");
+        GoodsBogie g2 = new GoodsBogie("Rectangular");
 
-        List<Bogie> bogies = new ArrayList<>();
+        // SAFE ASSIGNMENT
+        g1.assignCargo("Petroleum");
 
-        try {
-            // VALID bogies
-            bogies.add(new Bogie("Sleeper", 72));
-            bogies.add(new Bogie("AC Chair", 60));
+        // UNSAFE ASSIGNMENT
+        g2.assignCargo("Petroleum");
 
-            // INVALID bogie (will throw exception)
-            bogies.add(new Bogie("First Class", 0));
+        // SAFE AGAIN
+        g2.assignCargo("Coal");
 
-        } catch (InvalidCapacityException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        // FINAL STATE
+        System.out.println("Final Bogie States:");
+        System.out.println(g1);
+        System.out.println(g2);
 
-        // SHOW VALID BOGIES
-        System.out.println("\nValid Bogies:");
-        for (Bogie b : bogies) {
-            System.out.println(b);
-        }
-
-        // ==========================
-        // OPTIONAL CONTINUATION
-        // ==========================
-
-        // Safe program continues
         System.out.println("\nProgram continues safely...");
     }
 }
