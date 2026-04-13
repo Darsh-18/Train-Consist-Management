@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.LinkedList;
+import java.util.LinkedHashSet;
 
 public class TrainConsistManagementApp {
 
@@ -10,12 +11,17 @@ public class TrainConsistManagementApp {
 
         System.out.println("=== Train Consist Management App ===");
 
-        // UC1
+        // ==========================
+        // UC1: Initialize Train
+        // ==========================
         List<String> trainConsist = new ArrayList<>();
-        System.out.println("Train consist initialized.");
+
+        System.out.println("\nTrain consist initialized.");
         System.out.println("Initial bogie count: " + trainConsist.size());
 
-        // UC2
+        // ==========================
+        // UC2: ArrayList Operations
+        // ==========================
         trainConsist.add("Sleeper");
         trainConsist.add("AC Chair");
         trainConsist.add("First Class");
@@ -33,23 +39,24 @@ public class TrainConsistManagementApp {
         System.out.println("\nFinal Train Consist:");
         System.out.println(trainConsist);
 
-        // UC3
+        // ==========================
+        // UC3: HashSet (Unique IDs)
+        // ==========================
         Set<String> bogieIds = new HashSet<>();
+
         bogieIds.add("BG101");
         bogieIds.add("BG102");
-        bogieIds.add("BG101");
+        bogieIds.add("BG101"); // duplicate
         bogieIds.add("BG103");
 
         System.out.println("\nUnique Bogie IDs:");
         System.out.println(bogieIds);
 
         // ==========================
-        // UC4 STARTS HERE
+        // UC4: LinkedList (Ordered Train)
         // ==========================
-
         LinkedList<String> train = new LinkedList<>();
 
-        // Add bogies
         train.add("Engine");
         train.add("Sleeper");
         train.add("AC");
@@ -59,7 +66,7 @@ public class TrainConsistManagementApp {
         System.out.println("\nInitial Train Order:");
         System.out.println(train);
 
-        // Insert Pantry Car at index 2
+        // Insert Pantry Car
         train.add(2, "Pantry Car");
 
         System.out.println("\nAfter adding Pantry Car:");
@@ -71,5 +78,21 @@ public class TrainConsistManagementApp {
 
         System.out.println("\nAfter removing first and last bogies:");
         System.out.println(train);
+
+        // ==========================
+        // UC5: LinkedHashSet (Ordered + Unique)
+        // ==========================
+        LinkedHashSet<String> formation = new LinkedHashSet<>();
+
+        formation.add("Engine");
+        formation.add("Sleeper");
+        formation.add("Cargo");
+        formation.add("Guard");
+
+        // Duplicate
+        formation.add("Sleeper");
+
+        System.out.println("\nTrain Formation (LinkedHashSet):");
+        System.out.println(formation);
     }
 }
