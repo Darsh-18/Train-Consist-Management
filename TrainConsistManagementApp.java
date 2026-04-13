@@ -17,7 +17,6 @@ class Bogie {
     }
 }
 
-// NEW CLASS FOR UC12
 class GoodsBogie {
     String type;
     String cargo;
@@ -41,8 +40,6 @@ public class TrainConsistManagementApp {
 
         // UC1
         List<String> trainConsist = new ArrayList<>();
-        System.out.println("\nTrain consist initialized.");
-        System.out.println("Initial bogie count: " + trainConsist.size());
 
         // UC2
         trainConsist.add("Sleeper");
@@ -50,18 +47,11 @@ public class TrainConsistManagementApp {
         trainConsist.add("First Class");
         trainConsist.remove("AC Chair");
 
-        System.out.println("\nTrain Consist:");
-        System.out.println(trainConsist);
-
         // UC3
         Set<String> bogieIds = new HashSet<>();
         bogieIds.add("BG101");
         bogieIds.add("BG102");
         bogieIds.add("BG101");
-        bogieIds.add("BG103");
-
-        System.out.println("\nUnique Bogie IDs:");
-        System.out.println(bogieIds);
 
         // UC4
         LinkedList<String> train = new LinkedList<>();
@@ -75,114 +65,74 @@ public class TrainConsistManagementApp {
         train.removeFirst();
         train.removeLast();
 
-        System.out.println("\nOrdered Train:");
-        System.out.println(train);
-
         // UC5
         LinkedHashSet<String> formation = new LinkedHashSet<>();
         formation.add("Engine");
         formation.add("Sleeper");
         formation.add("Cargo");
         formation.add("Guard");
-        formation.add("Sleeper");
-
-        System.out.println("\nTrain Formation (LinkedHashSet):");
-        System.out.println(formation);
 
         // UC6
         Map<String, Integer> bogieCapacity = new HashMap<>();
         bogieCapacity.put("Sleeper", 72);
         bogieCapacity.put("AC Chair", 60);
-        bogieCapacity.put("First Class", 40);
 
-        System.out.println("\nBogie Capacity Mapping:");
-        for (Map.Entry<String, Integer> entry : bogieCapacity.entrySet()) {
-            System.out.println(entry.getKey() + " -> " + entry.getValue());
-        }
-
-        // UC7
+        // UC7 + UC8 + UC9 + UC10
         List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 60));
-        bogies.add(new Bogie("First Class", 40));
-        bogies.add(new Bogie("Sleeper", 70));
 
-        bogies.sort(Comparator.comparingInt(b -> b.capacity));
-
-        System.out.println("\nSorted Bogies:");
-        bogies.forEach(System.out::println);
-
-        // UC8
-        List<Bogie> filteredBogies = bogies.stream()
-                .filter(b -> b.capacity > 60)
-                .collect(Collectors.toList());
-
-        System.out.println("\nFiltered Bogies (>60):");
-        filteredBogies.forEach(System.out::println);
-
-        // UC9
-        Map<String, List<Bogie>> groupedBogies = bogies.stream()
-                .collect(Collectors.groupingBy(b -> b.name));
-
-        System.out.println("\nGrouped Bogies:");
-        for (Map.Entry<String, List<Bogie>> entry : groupedBogies.entrySet()) {
-            System.out.println(entry.getKey() + " -> " + entry.getValue());
+        for (int i = 0; i < 10000; i++) {
+            bogies.add(new Bogie("Sleeper", 72));
+            bogies.add(new Bogie("AC Chair", 60));
+            bogies.add(new Bogie("First Class", 40));
         }
-
-        // UC10
-        int totalCapacity = bogies.stream()
-                .map(b -> b.capacity)
-                .reduce(0, Integer::sum);
-
-        System.out.println("\nTotal Seating Capacity: " + totalCapacity);
 
         // UC11
-        Scanner sc = new Scanner(System.in);
-
-        System.out.print("\nEnter Train ID: ");
-        String trainId = sc.nextLine();
-
-        System.out.print("Enter Cargo Code: ");
-        String cargoCode = sc.nextLine();
-
         Pattern trainPattern = Pattern.compile("TRN-\\d{4}");
-        Pattern cargoPattern = Pattern.compile("PET-[A-Z]{2}");
 
-        if (trainPattern.matcher(trainId).matches()) {
-            System.out.println("Valid Train ID");
-        } else {
-            System.out.println("Invalid Train ID");
-        }
-
-        if (cargoPattern.matcher(cargoCode).matches()) {
-            System.out.println("Valid Cargo Code");
-        } else {
-            System.out.println("Invalid Cargo Code");
-        }
-
-        // ==========================
-        // UC12 STARTS HERE
-        // ==========================
+        // UC12
         List<GoodsBogie> goods = new ArrayList<>();
-
         goods.add(new GoodsBogie("Cylindrical", "Petroleum"));
         goods.add(new GoodsBogie("Open", "Coal"));
-        goods.add(new GoodsBogie("Cylindrical", "Petroleum"));
-        goods.add(new GoodsBogie("Box", "Grain"));
 
         boolean isSafe = goods.stream().allMatch(b ->
                 !b.type.equals("Cylindrical") || b.cargo.equals("Petroleum")
         );
 
-        System.out.println("\nGoods Bogies:");
-        goods.forEach(System.out::println);
+        System.out.println("\nSafety Check: " + (isSafe ? "SAFE" : "NOT SAFE"));
 
-        if (isSafe) {
-            System.out.println("Train is SAFE for transport");
-        } else {
-            System.out.println("Train is NOT SAFE");
+        // ==========================
+        // UC13 STARTS HERE
+        // ==========================
+
+        // LOOP PERFORMANCE
+        long startLoop = System.nanoTime();
+
+        List<Bogie> loopResult = new ArrayList<>();
+        for (Bogie b : bogies) {
+            if (b.capacity > 60) {
+                loopResult.add(b);
+            }
         }
 
-        sc.close();
+        long endLoop = System.nanoTime();
+        long loopTime = endLoop - startLoop;
+
+        // STREAM PERFORMANCE
+        long startStream = System.nanoTime();
+
+        List<Bogie> streamResult = bogies.stream()
+                .filter(b -> b.capacity > 60)
+                .collect(Collectors.toList());
+
+        long endStream = System.nanoTime();
+        long streamTime = endStream - startStream;
+
+        // OUTPUT
+        System.out.println("\nLoop Time (ns): " + loopTime);
+        System.out.println("Stream Time (ns): " + streamTime);
+
+        // Verify correctness
+        System.out.println("\nLoop Result Size: " + loopResult.size());
+        System.out.println("Stream Result Size: " + streamResult.size());
     }
 }
