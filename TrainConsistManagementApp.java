@@ -36,15 +36,10 @@ public class TrainConsistManagementApp {
         trainConsist.add("AC Chair");
         trainConsist.add("First Class");
 
-        System.out.println("\nAfter adding bogies:");
-        System.out.println(trainConsist);
-
         trainConsist.remove("AC Chair");
 
-        System.out.println("\nAfter removing AC Chair:");
+        System.out.println("\nTrain Consist:");
         System.out.println(trainConsist);
-
-        System.out.println("\nDoes Sleeper exist? " + trainConsist.contains("Sleeper"));
 
         // ==========================
         // UC3
@@ -109,24 +104,33 @@ public class TrainConsistManagementApp {
         bogies.add(new Bogie("Sleeper", 72));
         bogies.add(new Bogie("AC Chair", 60));
         bogies.add(new Bogie("First Class", 40));
+        bogies.add(new Bogie("Sleeper", 70)); // duplicate type for grouping demo
 
         bogies.sort(Comparator.comparingInt(b -> b.capacity));
 
-        System.out.println("\nSorted Bogies by Capacity:");
-        for (Bogie b : bogies) {
-            System.out.println(b);
-        }
+        System.out.println("\nSorted Bogies:");
+        bogies.forEach(System.out::println);
 
         // ==========================
-        // UC8 STARTS HERE
+        // UC8
         // ==========================
         List<Bogie> filteredBogies = bogies.stream()
                 .filter(b -> b.capacity > 60)
                 .collect(Collectors.toList());
 
-        System.out.println("\nFiltered Bogies (Capacity > 60):");
-        for (Bogie b : filteredBogies) {
-            System.out.println(b);
+        System.out.println("\nFiltered Bogies (>60):");
+        filteredBogies.forEach(System.out::println);
+
+        // ==========================
+        // UC9 STARTS HERE
+        // ==========================
+        Map<String, List<Bogie>> groupedBogies = bogies.stream()
+                .collect(Collectors.groupingBy(b -> b.name));
+
+        System.out.println("\nGrouped Bogies by Type:");
+
+        for (Map.Entry<String, List<Bogie>> entry : groupedBogies.entrySet()) {
+            System.out.println(entry.getKey() + " -> " + entry.getValue());
         }
     }
 }
