@@ -104,7 +104,7 @@ public class TrainConsistManagementApp {
         bogies.add(new Bogie("Sleeper", 72));
         bogies.add(new Bogie("AC Chair", 60));
         bogies.add(new Bogie("First Class", 40));
-        bogies.add(new Bogie("Sleeper", 70)); // duplicate type for grouping demo
+        bogies.add(new Bogie("Sleeper", 70));
 
         bogies.sort(Comparator.comparingInt(b -> b.capacity));
 
@@ -122,15 +122,23 @@ public class TrainConsistManagementApp {
         filteredBogies.forEach(System.out::println);
 
         // ==========================
-        // UC9 STARTS HERE
+        // UC9
         // ==========================
         Map<String, List<Bogie>> groupedBogies = bogies.stream()
                 .collect(Collectors.groupingBy(b -> b.name));
 
-        System.out.println("\nGrouped Bogies by Type:");
-
+        System.out.println("\nGrouped Bogies:");
         for (Map.Entry<String, List<Bogie>> entry : groupedBogies.entrySet()) {
             System.out.println(entry.getKey() + " -> " + entry.getValue());
         }
+
+        // ==========================
+        // UC10 STARTS HERE
+        // ==========================
+        int totalCapacity = bogies.stream()
+                .map(b -> b.capacity)
+                .reduce(0, Integer::sum);
+
+        System.out.println("\nTotal Seating Capacity: " + totalCapacity);
     }
 }
