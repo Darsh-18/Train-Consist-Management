@@ -6,33 +6,26 @@ public class TrainConsistManagementApp {
 
         System.out.println("=== Train Consist Management App ===");
 
-        // PASSENGER BOGIE CAPACITIES
-        int[] capacities = {72, 56, 24, 70, 60};
+        // BOGIE TYPE NAMES
+        String[] bogieNames = {
+                "Sleeper",
+                "AC Chair",
+                "First Class",
+                "General",
+                "Luxury"
+        };
 
+        // BEFORE SORT
         System.out.println("\nBefore Sorting:");
-        System.out.println(Arrays.toString(capacities));
+        System.out.println(Arrays.toString(bogieNames));
 
         // ==========================
-        // UC16: BUBBLE SORT
+        // UC17: Arrays.sort()
         // ==========================
-        int n = capacities.length;
+        Arrays.sort(bogieNames);
 
-        for (int i = 0; i < n - 1; i++) {
-
-            for (int j = 0; j < n - i - 1; j++) {
-
-                if (capacities[j] > capacities[j + 1]) {
-
-                    // SWAP
-                    int temp = capacities[j];
-                    capacities[j] = capacities[j + 1];
-                    capacities[j + 1] = temp;
-                }
-            }
-        }
-
-        // OUTPUT
-        System.out.println("\nAfter Bubble Sort:");
-        System.out.println(Arrays.toString(capacities));
+        // AFTER SORT
+        System.out.println("\nAfter Sorting:");
+        System.out.println(Arrays.toString(bogieNames));
     }
 }
