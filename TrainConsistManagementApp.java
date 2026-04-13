@@ -17,6 +17,22 @@ class Bogie {
     }
 }
 
+// NEW CLASS FOR UC12
+class GoodsBogie {
+    String type;
+    String cargo;
+
+    public GoodsBogie(String type, String cargo) {
+        this.type = type;
+        this.cargo = cargo;
+    }
+
+    @Override
+    public String toString() {
+        return type + " carrying " + cargo;
+    }
+}
+
 public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
@@ -120,9 +136,7 @@ public class TrainConsistManagementApp {
 
         System.out.println("\nTotal Seating Capacity: " + totalCapacity);
 
-        // ==========================
-        // UC11 STARTS HERE
-        // ==========================
+        // UC11
         Scanner sc = new Scanner(System.in);
 
         System.out.print("\nEnter Train ID: ");
@@ -131,25 +145,42 @@ public class TrainConsistManagementApp {
         System.out.print("Enter Cargo Code: ");
         String cargoCode = sc.nextLine();
 
-        // Regex patterns
         Pattern trainPattern = Pattern.compile("TRN-\\d{4}");
         Pattern cargoPattern = Pattern.compile("PET-[A-Z]{2}");
 
-        // Matchers
-        Matcher trainMatcher = trainPattern.matcher(trainId);
-        Matcher cargoMatcher = cargoPattern.matcher(cargoCode);
-
-        // Validation
-        if (trainMatcher.matches()) {
+        if (trainPattern.matcher(trainId).matches()) {
             System.out.println("Valid Train ID");
         } else {
             System.out.println("Invalid Train ID");
         }
 
-        if (cargoMatcher.matches()) {
+        if (cargoPattern.matcher(cargoCode).matches()) {
             System.out.println("Valid Cargo Code");
         } else {
             System.out.println("Invalid Cargo Code");
+        }
+
+        // ==========================
+        // UC12 STARTS HERE
+        // ==========================
+        List<GoodsBogie> goods = new ArrayList<>();
+
+        goods.add(new GoodsBogie("Cylindrical", "Petroleum"));
+        goods.add(new GoodsBogie("Open", "Coal"));
+        goods.add(new GoodsBogie("Cylindrical", "Petroleum"));
+        goods.add(new GoodsBogie("Box", "Grain"));
+
+        boolean isSafe = goods.stream().allMatch(b ->
+                !b.type.equals("Cylindrical") || b.cargo.equals("Petroleum")
+        );
+
+        System.out.println("\nGoods Bogies:");
+        goods.forEach(System.out::println);
+
+        if (isSafe) {
+            System.out.println("Train is SAFE for transport");
+        } else {
+            System.out.println("Train is NOT SAFE");
         }
 
         sc.close();
