@@ -7,23 +7,26 @@ public class TrainConsistManagementApp {
 
         System.out.println("=== Train Consist Management App ===");
 
-        // UNSORTED INPUT (REAL CASE)
-        String[] bogieIds = {"BG309", "BG101", "BG550", "BG205", "BG412"};
+        // CHANGE THIS ARRAY TO TEST
+        String[] bogieIds = {};   // try {} OR {"BG101","BG205","BG309"}
 
-        // STEP 1: SORT ARRAY (MANDATORY)
-        Arrays.sort(bogieIds);
-
-        System.out.println("\nSorted Bogie IDs:");
-        System.out.println(Arrays.toString(bogieIds));
-
-        // INPUT
         Scanner sc = new Scanner(System.in);
+
         System.out.print("\nEnter Bogie ID to search: ");
         String key = sc.nextLine();
 
         // ==========================
-        // UC19: BINARY SEARCH
+        // UC20: FAIL-FAST CHECK
         // ==========================
+        if (bogieIds.length == 0) {
+            throw new IllegalStateException("Cannot perform search: No bogies available in train.");
+        }
+
+        // ==========================
+        // BINARY SEARCH (UC19)
+        // ==========================
+        Arrays.sort(bogieIds);
+
         int low = 0;
         int high = bogieIds.length - 1;
         boolean found = false;
@@ -31,22 +34,21 @@ public class TrainConsistManagementApp {
         while (low <= high) {
 
             int mid = (low + high) / 2;
+            int cmp = bogieIds[mid].compareTo(key);
 
-            int comparison = bogieIds[mid].compareTo(key);
-
-            if (comparison == 0) {
+            if (cmp == 0) {
                 found = true;
                 break;
-            } else if (comparison < 0) {
-                low = mid + 1; // SEARCH RIGHT
+            } else if (cmp < 0) {
+                low = mid + 1;
             } else {
-                high = mid - 1; // SEARCH LEFT
+                high = mid - 1;
             }
         }
 
         // OUTPUT
         if (found) {
-            System.out.println("Bogie FOUND using Binary Search.");
+            System.out.println("Bogie FOUND.");
         } else {
             System.out.println("Bogie NOT FOUND.");
         }
