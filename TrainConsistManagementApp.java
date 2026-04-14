@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class TrainConsistManagementApp {
@@ -6,30 +7,46 @@ public class TrainConsistManagementApp {
 
         System.out.println("=== Train Consist Management App ===");
 
-        // BOGIE ID ARRAY (UNSORTED)
-        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
+        // UNSORTED INPUT (REAL CASE)
+        String[] bogieIds = {"BG309", "BG101", "BG550", "BG205", "BG412"};
+
+        // STEP 1: SORT ARRAY (MANDATORY)
+        Arrays.sort(bogieIds);
+
+        System.out.println("\nSorted Bogie IDs:");
+        System.out.println(Arrays.toString(bogieIds));
 
         // INPUT
         Scanner sc = new Scanner(System.in);
         System.out.print("\nEnter Bogie ID to search: ");
-        String searchKey = sc.nextLine();
+        String key = sc.nextLine();
 
         // ==========================
-        // UC18: LINEAR SEARCH
+        // UC19: BINARY SEARCH
         // ==========================
+        int low = 0;
+        int high = bogieIds.length - 1;
         boolean found = false;
 
-        for (int i = 0; i < bogieIds.length; i++) {
+        while (low <= high) {
 
-            if (bogieIds[i].equals(searchKey)) {
+            int mid = (low + high) / 2;
+
+            int comparison = bogieIds[mid].compareTo(key);
+
+            if (comparison == 0) {
                 found = true;
-                break; // EARLY STOP
+                break;
+            } else if (comparison < 0) {
+                low = mid + 1; // SEARCH RIGHT
+            } else {
+                high = mid - 1; // SEARCH LEFT
             }
         }
 
         // OUTPUT
         if (found) {
-            System.out.println("Bogie FOUND in the train.");
+            System.out.println("Bogie FOUND using Binary Search.");
         } else {
             System.out.println("Bogie NOT FOUND.");
         }
